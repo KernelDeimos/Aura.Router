@@ -145,7 +145,18 @@ class Path implements RuleInterface
     protected function buildRegex(Route $route)
     {
         $this->route = $route;
-        $this->regex = $this->basepath . $this->route->path;
+
+        {
+            // Trim leading and following slashes from basepath
+            $basePart = trim($this->basepath, '/');
+
+            // Trim leading slash from route path
+            $routePart = ltrim($this->route->path, '/');
+
+            // Join basepath and route with forwardslash
+            $this->regex = '/' . implode('/', array($basePart, $routePart));
+        }
+
         $this->setRegexOptionalAttributes();
         $this->setRegexAttributes();
         $this->setRegexWildcard();
